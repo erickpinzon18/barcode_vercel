@@ -28,7 +28,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
     session({
-        secret: process.env.SECRET_KEY_SESSION, 
+        secret: "secretSession", 
         resave: false, 
         saveUninitialized: true, // true: permite que se guarde la cookie en el navegador
         cookie: { maxAge: 3600000 }, // 1 hour
