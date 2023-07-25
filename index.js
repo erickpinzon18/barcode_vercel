@@ -40,5 +40,5 @@ app.use("/js", express.static(join(__dirname, "src/js")));
 app.use("/libs", express.static(join(__dirname, "src/libs")));
 app.use("/config", express.static(join(__dirname, "./config")));
 
-app.set("views", "./src/views");
+app.set("views", "./views");
 app.set("view engine", "ejs");
