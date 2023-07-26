@@ -5,7 +5,7 @@ const Producto = sequelize.define(
 	"producto",
 	{
 		codigo: {
-			type: DataTypes.INTEGER,
+			type: DataTypes.STRING(50),
 			primaryKey: true,
 			allowNull: false,
 		},

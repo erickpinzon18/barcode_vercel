@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html data-bs-theme="light" lang="en">
+<html>
 	<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
 		<%- include('templates/readerHead')%>
 		<title>Lector de Código de Barras</title>
-		<script type="module" src="./js/reader.js" defer></script>
+        <script src="./js/reader.js" defer></script>
+        <link rel="stylesheet" href="./css/barcode.css" type="text/css" />
 	</head>
 
 	<body id="page-top">
@@ -110,6 +113,7 @@
 										</div>
 									</div>
 									<div class="card-body">
+                                        <p id="resultado">Aquí aparecerá el código</p>
 										<form
 											action="/registrarProducto"
 											id="formNuevoProducto"
@@ -126,6 +130,7 @@
 													class="form-control"
 													id="barcode"
 													name="barcode"
+                                                    placeholder="Escanear Codigo de Barras"
 													required
 												/>
 											</div>
@@ -140,6 +145,7 @@
 													class="form-control"
 													id="etiqueta"
 													name="etiqueta"
+                                                    placeholder="Etiqueta"
 													required
 												/>
 											</div>
@@ -192,7 +198,7 @@
 											</button>
 										</form>
                                         <div class="container mt-3">
-                                            <h3><%= messages ? messages.producto ? messages.message + " | Etiqueta: " + messages.producto.etiqueta : messages.message : "" %></h3>
+                                            <h5 class="text-warning"><b><%= messages ? messages.producto ? messages.message + " | Etiqueta: " + messages.producto.etiqueta : messages.message : "" %></b></h5>
                                         </div>
 									</div>
 								</div>
@@ -257,11 +263,11 @@
                                             <tbody>
                                                 <% productos.map((producto) => { %>
                                                     <tr>
-                                                        <td><%= producto.codigo %></td>
-                                                        <td><%= producto.etiqueta %></td>
-                                                        <td><%= producto.cantidad %></td>
-                                                        <td><a onclick="producto.editarProducto(barcode);" class="btn btn-primary">Editar</a></td>
-                                                        <td><a onclick="producto.eliminarProducto(barcode);" class="btn btn-danger">Eliminar</a></td>
+                                                        <td id="codigo_n<%= producto.codigo %>"><%= producto.codigo %></td>
+                                                        <td id="etiqueta_n<%= producto.codigo %>"><%= producto.etiqueta %></td>
+                                                        <td id="cantidad_n<%= producto.codigo %>"><%= producto.cantidad %></td>
+                                                        <td><a onclick="editarProducto('<%= producto.codigo %>')" class="btn btn-primary">Editar</a></td>
+                                                        <td><a onclick="eliminarProducto('<%= producto.codigo %>')" class="btn btn-danger">Eliminar</a></td>
                                                     </tr>    
                                                 <% }) %>
                                             </tbody>
@@ -329,23 +335,20 @@
 										</div>
 									</div>
 									<div class="card-body">
-										<div class="text-center small mt-4">
-											<span class="me-2"
+										<div class="text-center small mt-2">
+											<span class="me-2" id="label_detenido"
 												><i
 													class="fas fa-circle text-danger text-primary"
 												></i
 												>&nbsp;Detenido</span
-											><span class="me-2"
+											><span class="me-2" id="label_leyendo"
 												><i
 													class="fas fa-circle text-success"
 												></i
 												>&nbsp;Leyendo</span
 											>
 										</div>
-                                        <p>Status:</p>
-				<h3 class="text-success" id="label_leyendo">Leyendo</h3>
-				<h3 class="text-danger" id="label_detenido">Detenido</h3>
-				<div id="container"></div>
+                                        <div id="contenedor" class="mt-2"></div>
 									</div>
 								</div>
 							</div>
@@ -364,7 +367,256 @@
 				><i class="fas fa-angle-up"></i
 			></a>
 		</div>
-		<script src="./libs/assets/bootstrap/js/bootstrap.min.js"></script>
-		<script src="./libs/assets/js/theme.js"></script>
+
+        <!-- !Modal ERROR -->
+		<div
+            class="modal fade"
+            id="modalError"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1
+                            class="modal-title fs-5 text-danger"
+                            id="staticBackdropLabel"
+                        >
+                            ERROR: <span id="modal_error"></span>
+                        </h1>
+                    </div>
+                    <div class="modal-body" id="modal_error_body">...</div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            data-bs-dismiss="modal"
+                            onclick="location.reload()"
+                        >
+                            Recargar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- *** Modal EDITAR -->
+		<div
+            class="modal fade"
+            id="modalEditar"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form
+                        action="/actualizarProducto"
+                        id="formActualizarProducto"
+                        method="post"
+                    >
+                        <div class="modal-header">
+                            <h1
+                                class="modal-title fs-5 text-primary"
+                                id="staticBackdropLabel"
+                            >
+                                <b>EDITAR PRODUCTO</b>
+                            </h1>
+                        </div>
+                        <div class="modal-body" id="modal_editar_body">
+                                <div class="mb-3">
+                                    <label
+                                        for="barcode"
+                                        class="form-label"
+                                        >Codigo de Barras</label
+                                    >
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="barcode_edit"
+                                        name="barcode"
+                                        placeholder="Escanear Codigo de Barras"
+                                        required
+                                        readonly
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label
+                                        for="etiqueta"
+                                        class="form-label"
+                                        >Etiqueta</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="etiqueta_edit"
+                                        name="etiqueta"
+                                        placeholder="Etiqueta"
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <label
+                                            for="cantidad"
+                                            class="form-label"
+                                            >Cantidad</label
+                                        >
+                                        <div class="col">
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                id="cantidad_edit"
+                                                name="cantidad"
+                                                min="1"
+                                                value="1"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col">
+                                            <button
+                                                type="button"
+                                                class="btn btn-success"
+                                                id="btn_add_edit"
+                                            >
+                                                +
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="btn btn-danger"
+                                                id="btn_substract_edit"
+                                            >
+                                                -
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                type="submit"
+                                class="btn btn-success"
+                                data-bs-dismiss="modal"
+                            >
+                                Editar
+                            </button>
+                            <button
+                                type="reset"
+                                class="btn btn-danger"
+                                data-bs-dismiss="modal"
+                                >
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ? Modal ELIMINAR -->
+		<div
+            class="modal fade"
+            id="modalEliminar"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabindex="-1"
+            aria-labelledby="staticBackdropLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form
+                        action="/eliminarProducto"
+                        id="formEliminarProducto"
+                        method="post"
+                    >
+                        <div class="modal-header">
+                            <h1
+                                class="modal-title fs-5 text-danger"
+                                id="staticBackdropLabel"
+                            >
+                                <b>ELIMINAR PRODUCTO</b>
+                            </h1>
+                        </div>
+                        <div class="modal-body" id="modal_eliminar_body">
+                                <div class="mb-3">
+                                    <label
+                                        for="barcode"
+                                        class="form-label"
+                                        >Codigo de Barras</label
+                                    >
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="barcode_delete"
+                                        name="barcode"
+                                        placeholder="Escanear Codigo de Barras"
+                                        required
+                                        readonly
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label
+                                        for="etiqueta"
+                                        class="form-label"
+                                        >Etiqueta</label
+                                    >
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        id="etiqueta_delete"
+                                        name="etiqueta"
+                                        placeholder="Etiqueta"
+                                        readonly
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <label
+                                            for="cantidad"
+                                            class="form-label"
+                                            >Cantidad</label
+                                        >
+                                        <div class="col">
+                                            <input
+                                                type="number"
+                                                class="form-control"
+                                                id="cantidad_delete"
+                                                name="cantidad"
+                                                min="1"
+                                                value="1"
+                                                readonly
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button
+                                type="submit"
+                                class="btn btn-danger"
+                                data-bs-dismiss="modal"
+                            >
+                                Eliminar
+                            </button>
+                            <button
+                                type="reset"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                                >
+                                Cancelar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 	</body>
 </html>
