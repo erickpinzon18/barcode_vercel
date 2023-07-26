@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+	<head>
+		<%- include('templates/readerHead')%>
+		<title>Lector de Código de Barras</title>
+		<script type="module" src="./js/reader.js" defer></script>
+	</head>
+
+	<body id="page-top">
+		<div id="wrapper">
+			<nav
+				class="navbar align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0 navbar-dark"
+			>
+				<div class="container-fluid d-flex flex-column p-0">
+					<a
+						class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
+						href="#"
+					>
+						<div class="sidebar-brand-icon rotate-n-15">
+							<i class="fas fa-laugh-wink"></i>
+						</div>
+						<div class="sidebar-brand-text mx-3">
+							<span>Reader</span>
+						</div>
+					</a>
+					<hr class="sidebar-divider my-0" />
+					<ul class="navbar-nav text-light" id="accordionSidebar">
+						<li class="nav-item">
+							<a class="nav-link active" href="index.html"
+								><i class="fas fa-tachometer-alt"></i
+								><span>Lector</span></a
+							>
+						</li>
+					</ul>
+					<div class="text-center d-none d-md-inline">
+						<button
+							class="btn rounded-circle border-0"
+							id="sidebarToggle"
+							type="button"
+						></button>
+					</div>
+				</div>
+			</nav>
+			<div class="d-flex flex-column" id="content-wrapper">
+				<div id="content">
+					<nav
+						class="navbar navbar-expand bg-white shadow mb-4 topbar static-top navbar-light"
+					>
+						<div class="container-fluid">
+							<button
+								class="btn btn-link d-md-none rounded-circle me-3"
+								id="sidebarToggleTop"
+								type="button"
+							>
+								<i class="fas fa-bars"></i>
+							</button>
+							<h3 class="text-dark mb-0">
+								Lector de Código de Barras
+							</h3>
+						</div>
+					</nav>
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-md-12 col-lg-5 col-xl-5">
+								<div class="card shadow mb-4">
+									<div
+										class="card-header d-flex justify-content-between align-items-center"
+									>
+										<h6 class="text-primary fw-bold m-0">
+											Registro de Productos
+										</h6>
+										<div class="dropdown no-arrow">
+											<button
+												class="btn btn-link btn-sm dropdown-toggle"
+												aria-expanded="false"
+												data-bs-toggle="dropdown"
+												type="button"
+											>
+												<i
+													class="fas fa-ellipsis-v text-gray-400"
+												></i>
+											</button>
+											<div
+												class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
+											>
+												<p
+													class="text-center dropdown-header"
+												>
+													dropdown header:
+												</p>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Action</a
+												><a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Another action</a
+												>
+												<div
+													class="dropdown-divider"
+												></div>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Something else
+													here</a
+												>
+											</div>
+										</div>
+									</div>
+									<div class="card-body">
+										<form
+											action="/registrarProducto"
+											id="formNuevoProducto"
+											method="post"
+										>
+											<div class="mb-3">
+												<label
+													for="barcode"
+													class="form-label"
+													>Codigo de Barras</label
+												>
+												<input
+													type="number"
+													class="form-control"
+													id="barcode"
+													name="barcode"
+													required
+												/>
+											</div>
+											<div class="mb-3">
+												<label
+													for="etiqueta"
+													class="form-label"
+													>Etiqueta</label
+												>
+												<input
+													type="text"
+													class="form-control"
+													id="etiqueta"
+													name="etiqueta"
+													required
+												/>
+											</div>
+											<div class="mb-3">
+												<div class="row">
+													<label
+														for="cantidad"
+														class="form-label"
+														>Cantidad</label
+													>
+													<div class="col">
+														<input
+															type="number"
+															class="form-control"
+															id="cantidad"
+															name="cantidad"
+															min="1"
+															value="1"
+															required
+														/>
+													</div>
+													<div class="col">
+														<button
+															class="btn btn-success"
+															id="btn_add"
+														>
+															+
+														</button>
+														<button
+															class="btn btn-danger"
+															id="btn_substract"
+														>
+															-
+														</button>
+													</div>
+												</div>
+											</div>
+											<button
+												type="submit"
+												class="btn btn-primary"
+											>
+												Registrar
+											</button>
+											<button
+												type="reset"
+												class="btn btn-danger"
+												id="btn_reset"
+											>
+												Limpiar
+											</button>
+										</form>
+                                        <div class="container mt-3">
+                                            <h3><%= messages ? messages.producto ? messages.message + " | Etiqueta: " + messages.producto.etiqueta : messages.message : "" %></h3>
+                                        </div>
+									</div>
+								</div>
+								<div class="card shadow mb-4">
+									<div
+										class="card-header d-flex justify-content-between align-items-center"
+									>
+										<h6 class="text-primary fw-bold m-0">
+											Productos
+										</h6>
+										<div class="dropdown no-arrow">
+											<button
+												class="btn btn-link btn-sm dropdown-toggle"
+												aria-expanded="false"
+												data-bs-toggle="dropdown"
+												type="button"
+											>
+												<i
+													class="fas fa-ellipsis-v text-gray-400"
+												></i>
+											</button>
+											<div
+												class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
+											>
+												<p
+													class="text-center dropdown-header"
+												>
+													dropdown header:
+												</p>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Action</a
+												><a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Another action</a
+												>
+												<div
+													class="dropdown-divider"
+												></div>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Something else
+													here</a
+												>
+											</div>
+										</div>
+									</div>
+									<div class="card-body">
+                                        <table class="table table-striped-columns mt-3">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Código</th>
+                                                    <th scope="col">Producto</th>
+                                                    <th scope="col">Cantidad</th>
+                                                    <th scope="col">Editar</th>
+                                                    <th scope="col">Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% productos.map((producto) => { %>
+                                                    <tr>
+                                                        <td><%= producto.codigo %></td>
+                                                        <td><%= producto.etiqueta %></td>
+                                                        <td><%= producto.cantidad %></td>
+                                                        <td><a onclick="producto.editarProducto(barcode);" class="btn btn-primary">Editar</a></td>
+                                                        <td><a onclick="producto.eliminarProducto(barcode);" class="btn btn-danger">Eliminar</a></td>
+                                                    </tr>    
+                                                <% }) %>
+                                            </tbody>
+                                        </table>
+                                    </div>
+								</div>
+								<a
+									class="btn btn-primary btn-sm d-none d-sm-inline-block"
+									role="button"
+									href="#"
+									><i
+										class="fas fa-download fa-sm text-white-50"
+									></i
+									>&nbsp;Generate Report</a
+								>
+							</div>
+							<div
+								class="col-md-12 col-lg-7 col-xl-7 col-xxl-7 offset-lg-0"
+							>
+								<div class="card shadow mb-4">
+									<div
+										class="card-header d-flex justify-content-between align-items-center"
+									>
+										<h6 class="text-primary fw-bold m-0">
+											Scanner
+										</h6>
+										<div class="dropdown no-arrow">
+											<button
+												class="btn btn-link btn-sm dropdown-toggle"
+												aria-expanded="false"
+												data-bs-toggle="dropdown"
+												type="button"
+											>
+												<i
+													class="fas fa-ellipsis-v text-gray-400"
+												></i>
+											</button>
+											<div
+												class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
+											>
+												<p
+													class="text-center dropdown-header"
+												>
+													dropdown header:
+												</p>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Action</a
+												><a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Another action</a
+												>
+												<div
+													class="dropdown-divider"
+												></div>
+												<a
+													class="dropdown-item"
+													href="#"
+													>&nbsp;Something else
+													here</a
+												>
+											</div>
+										</div>
+									</div>
+									<div class="card-body">
+										<div class="text-center small mt-4">
+											<span class="me-2"
+												><i
+													class="fas fa-circle text-danger text-primary"
+												></i
+												>&nbsp;Detenido</span
+											><span class="me-2"
+												><i
+													class="fas fa-circle text-success"
+												></i
+												>&nbsp;Leyendo</span
+											>
+										</div>
+                                        <p>Status:</p>
+				<h3 class="text-success" id="label_leyendo">Leyendo</h3>
+				<h3 class="text-danger" id="label_detenido">Detenido</h3>
+				<div id="container"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<footer class="bg-white sticky-footer">
+					<div class="container my-auto">
+						<div class="text-center my-auto copyright">
+							<span>Copyright © Reader 2023</span>
+						</div>
+					</div>
+				</footer>
+			</div>
+			<a class="border rounded d-inline scroll-to-top" href="#page-top"
+				><i class="fas fa-angle-up"></i
+			></a>
+		</div>
+		<script src="./libs/assets/bootstrap/js/bootstrap.min.js"></script>
+		<script src="./libs/assets/js/theme.js"></script>
+	</body>
+</html>

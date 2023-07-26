@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include('templates/head')%>
+		<script type="module" src="./js/reader.js" defer></script>
+		<title>Barcode Scanner</title>
+	</head>
+	<body>
+		<div class="row container mt-2">
+            <h1 class="display-2">Lector de Código de Barras</h1>
+			<div class="col-6 mt-3">
+				<form
+					action="/registrarProducto"
+					id="formNuevoProducto"
+					method="post"
+				>
+					<div class="mb-3">
+						<label for="barcode" class="form-label"
+							>Codigo de Barras</label
+						>
+						<input
+							type="number"
+							class="form-control"
+							id="barcode"
+							name="barcode"
+							required
+						/>
+					</div>
+					<div class="mb-3">
+						<label for="etiqueta" class="form-label"
+							>Etiqueta</label
+						>
+						<input
+							type="text"
+							class="form-control"
+							id="etiqueta"
+							name="etiqueta"
+							required
+						/>
+					</div>
+					<div class="mb-3">
+						<div class="row">
+							<label for="cantidad" class="form-label"
+								>Cantidad</label
+							>
+							<div class="col">
+								<input
+									type="number"
+									class="form-control"
+									id="cantidad"
+									name="cantidad"
+									min="1"
+									value="1"
+									required
+								/>
+							</div>
+							<div class="col">
+								<button class="btn btn-success" id="btn_add">
+									+
+								</button>
+								<button
+									class="btn btn-danger"
+									id="btn_substract"
+								>
+									-
+								</button>
+							</div>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary">
+						Registrar
+					</button>
+					<button type="reset" class="btn btn-danger" id="btn_reset">
+						Limpiar
+					</button>
+				</form>
+                <div class="container mt-3">
+                    <% console.log(messages) %>
+                    <h3><%= messages ? messages.producto ? messages.message + " | Etiqueta: " + messages.producto.etiqueta : messages.message : "" %></h3>
+                </div>
+				<table class="table table-striped-columns mt-3">
+					<thead>
+						<tr>
+							<th scope="col">Código</th>
+							<th scope="col">Producto</th>
+							<th scope="col">Cantidad</th>
+							<th scope="col">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% productos.map((producto) => { %>
+                            <tr>
+                                <td><%= producto.codigo %></td>
+                                <td><%= producto.etiqueta %></td>
+                                <td><%= producto.cantidad %></td>
+                            </tr>    
+                        <% }) %>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-3 mt-3">
+                Status:
+				<h3 class="text-success" id="label_leyendo">Leyendo</h3>
+				<h3 class="text-danger" id="label_detenido">Detenido</h3>
+				<div id="container"></div>
+			</div>
+		</div>
+
+		<!-- !Modal ERROR -->
+		<div
+			class="modal fade"
+			id="modalError"
+			data-bs-backdrop="static"
+			data-bs-keyboard="false"
+			tabindex="-1"
+			aria-labelledby="staticBackdropLabel"
+			aria-hidden="true"
+		>
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1
+							class="modal-title fs-5 text-danger"
+							id="staticBackdropLabel"
+						>
+							ERROR: <span id="modal_error"></span>
+						</h1>
+					</div>
+					<div class="modal-body" id="modal_body">...</div>
+					<div class="modal-footer">
+						<button
+							type="button"
+							class="btn btn-danger"
+							data-bs-dismiss="modal"
+							onclick="location.reload()"
+						>
+							Recargar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
