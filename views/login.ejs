@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+	<head>
+		<title>Login</title>
+		<%- include('templates/head')%>
+	</head>
+
+	<body class="bg-gradient-primary">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-9 col-lg-12 col-xl-10">
+					<div class="card shadow-lg o-hidden border-0 my-5">
+						<div class="card-body p-0">
+							<div class="row">
+								<div class="col-lg-6 d-none d-lg-flex">
+									<div
+										class="flex-grow-1 bg-login-image"
+										style="
+											background-image: url(https://images.unsplash.com/photo-1545941962-1b6654eb8072?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80);
+										"
+									></div>
+								</div>
+								<div class="col-lg-6">
+									<div class="p-5">
+										<div class="text-center">
+											<h4 class="text-dark mb-4">
+												Bienvenido!
+											</h4>
+										</div>
+										<form class="user" action="/login" method="post">
+											<div class="mb-3">
+												<input
+													class="form-control form-control-user"
+													type="text"
+													id="usuario"
+													placeholder="Usuario"
+													name="usuario"
+                                                    required
+												/>
+											</div>
+											<div class="mb-3">
+												<input
+													class="form-control form-control-user"
+													type="password"
+													id="contrasena"
+													placeholder="Contraseña"
+													name="contrasena"
+                                                    required
+												/>
+											</div>
+											<button
+												class="btn btn-primary d-block btn-user w-100"
+												type="submit"
+											>
+												Login
+											</button>
+											<hr />
+										</form>
+                                        <h5 class="text-danger text-center"><b><%= messages ? messages.message : "" %></b></h5>
+                                        <div class="text-center">
+											<a
+												class="small"
+												href="register.html"
+												>Crear una cuenta!</a
+											>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="assets/bootstrap/js/bootstrap.min.js"></script>
+		<script src="assets/js/theme.js"></script>
+	</body>
+</html>

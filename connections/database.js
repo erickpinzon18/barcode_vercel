@@ -8,13 +8,18 @@ dotenv.config();
  * @type {Sequelize}
  */
 const sequelize = new Sequelize(
-	process.env.MYSQL_ADDON_DB,
-	process.env.MYSQL_ADDON_USER,
-	process.env.MYSQL_ADDON_PASSWORD,
+	process.env.SQL_NAME,
+	process.env.SQL_USER,
+	process.env.SQL_PASS,
 	{
-		host: process.env.MYSQL_ADDON_HOST,
-		port: parseInt(process.env.MYSQL_ADDON_PORT),
-		dialect: "mysql",
+		host: process.env.SQL_HOST,
+		port: parseInt(process.env.SQL_PORT),
+		dialect: "mssql",
+		dialectOptions: {
+			options: {
+				encrypt: false, // Si tu servidor SQL Server necesita cifrado, establecer a true
+			},
+		},
 		logging: false, // Establecer a false para desactivar los mensajes de sequelize
 	}
 );
@@ -24,9 +29,9 @@ const sequelize = new Sequelize(
  * @returns {Promise} Una promesa que se resuelve una vez que se ha completado la sincronización.
  */
 sequelize
-	.sync({ force: false })
+	.sync()
 	.then(() => {
-		console.info("Connected to MYSQL");
+		console.info("Connected to SQL SERVER");
 	})
 	.catch((e) => {
 		console.error(`Error: ${e}`);

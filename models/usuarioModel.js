@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../connections/database.js";
 
-const Producto = sequelize.define(
-	"producto",
+const Usuario = sequelize.define(
+	"usuario",
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -10,31 +10,27 @@ const Producto = sequelize.define(
 			allowNull: false,
             autoIncrement: true,
 		},
-		codigo: {
+		nombre: {
 			type: DataTypes.STRING(50),
 			allowNull: false,
 		},
-		etiqueta: {
-			type: DataTypes.STRING(100),
+		usuario: {
+			type: DataTypes.STRING(50),
 			allowNull: false,
 		},
-		cantidad: {
-			type: DataTypes.INTEGER,
+		contrasena: {
+			type: DataTypes.STRING(50),
 			allowNull: false,
 		},
-		fecha_cap: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
-		id_usuario: {
-			type: DataTypes.INTEGER,
+		status: {
+			type: DataTypes.BOOLEAN,
 			allowNull: false,
 		},
 	},
 	{
-		tableName: "producto", // Nombre real de la tabla en la base de datos
+		tableName: "usuario", // Nombre real de la tabla en la base de datos
 		timestamps: false, // Deshabilitar los campos createdAt y updatedAt
 	}
 );
 
-export default Producto;
+export default Usuario;
