@@ -1,4 +1,7 @@
+let scanned = false;
 window.onload = $("#label_detenido").hide();
+
+$('#nav_reader').addClass('active');
 
 document.addEventListener("DOMContentLoaded", () => {
 	Quagga.init(
@@ -32,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	);
 
 	Quagga.onDetected((data) => {
-		barcodeRead(data.codeResult.code);
+		if (!scanned) barcodeRead(data.codeResult.code);
 	});
 
 	Quagga.onProcessed(function (result) {
@@ -61,11 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function barcodeRead(barcode) {
+    var audio = new Audio('/sounds/beep.mp3');
+    audio.play();
 	$("#label_detenido").show();
 	$("#label_leyendo").hide();
 	$("#barcode").val(barcode);
 	$("#barcode").prop("readonly", true);
 	$("#etiqueta").trigger("focus");
+    scanned = true;
 }
 
 function editarProducto(barcode) {
@@ -111,16 +117,5 @@ $("#btn_reset").on("click", function (event) {
 	$("#label_detenido").hide();
 	$("#label_leyendo").show();
 	$("#barcode").prop("readonly", false);
+    scanned = false;
 });
-
-// $("#formNuevoProducto").submit(async function (event) {
-// 	event.preventDefault();
-
-// 	const producto = new Producto();
-
-// 	producto.registrarProducto({
-// 		barcode: $("#barcode").val(),
-// 		etiqueta: $("#etiqueta").val(),
-// 		cantidad: $("#cantidad").val(),
-// 	});
-// });

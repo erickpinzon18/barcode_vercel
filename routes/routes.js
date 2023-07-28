@@ -22,7 +22,12 @@ routes.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
-// Ruta principal
+// Ruta para el registro
+routes.get("/register", (req, res) => {
+    res.render("register.ejs", { messages: req.session.messages });
+});
+
+// Ruta lector
 routes.get("/reader", async (req, res) => {
 	if (!req.session.user) {
         res.redirect("/");
@@ -36,9 +41,30 @@ routes.get("/reader", async (req, res) => {
 	} catch (error) {
 		console.log(error);
 		// Retornar un error en caso de que no se puedan obtener los productos
-		res.status(500).json({ message: "Error al obtener los productos" });
+		req.session.messages = { message: "Error al iniciar sesión" };
+        res.redirect("/");
 	}
 });
+
+// Ruta para el control de usuarios
+routes.get("/control_users", async (req, res) => {
+    if (!req.session.user) {
+        res.redirect("/");
+        return;
+    }
+    try {
+        // Obtener todos los usuarios de la base de datos
+        const usuarios = await Usuario.findAll();
+        // Renderizar la vista control.ejs y pasarle los usuarios
+        res.render("control_users.ejs", { usuarios, messages: req.session.messages, usuario: req.session.user });
+    } catch (error) {
+        console.log(error);
+        // Retornar un error en caso de que no se puedan obtener los usuarios
+        req.session.messages = { message: "Error al iniciar sesión" };
+        res.redirect("/");
+    }
+});
+
 
 // Ruta para login
 routes.post("/login", async (req, res) => {
@@ -60,6 +86,14 @@ routes.post("/login", async (req, res) => {
         if (!existUser) {
             req.session.messages = {
                 message: "El usuario no existe",
+            };
+            res.redirect("/");
+            return;
+        }
+        // Validar que el usuario este habilitado
+        if (!existUser.status) {
+            req.session.messages = {
+                message: "El usuario no esta habilitado",
             };
             res.redirect("/");
             return;
@@ -93,7 +127,6 @@ routes.post("/registrarUsuario", async (req, res) => {
 	try {
 		// Obtener los datos del formulario
 		const { nombre, usuario, contrasena } = req.body;
-		console.log(req.body);
 		if (!nombre || !usuario || !contrasena) {
 			req.session.messages = {
 				message: "Por favor, llene todos los campos",
@@ -105,7 +138,6 @@ routes.post("/registrarUsuario", async (req, res) => {
 		const existUser = await Usuario.findOne({
 			where: { usuario },
 		});
-		console.log(existUser);
 		// Si el usuario existe, retornar un error
 		if (existUser) {
 			req.session.messages = {
@@ -131,6 +163,97 @@ routes.post("/registrarUsuario", async (req, res) => {
 		req.session.messages = { message: "Error al crear el usuario" };
 		res.redirect("/");
 	}
+});
+
+// Ruta para editar usuario
+routes.post("/actualizarUsuario", async (req, res) => {
+    try {
+        // Obtener los datos del formulario
+        const { id, nombre, usuario, contrasena, status } = req.body;
+        if (!nombre || !usuario || !contrasena) {
+            req.session.messages = {
+                message: "Por favor, llene todos los campos",
+            };
+            res.redirect("/control_users");
+            return;
+        }
+        // Validar que el usuario exista
+        const existUser = await Usuario.findOne({
+            where: { id },
+        });
+        // Si el usuario no existe, retornar un error
+        if (!existUser) {
+            req.session.messages = {
+                message: "El usuario no existe",
+            };
+            res.redirect("/control_users");
+            return;
+        }
+        // Si el usuario existe, modificarlo
+        existUser.nombre = nombre;
+        existUser.usuario = usuario;
+        existUser.contrasena = contrasena;
+        existUser.status = status;
+        // Guardar el usuario en la base de datos
+        const usuarioEditado = await existUser.save();
+        // Retornar el usuario modificado
+        req.session.messages = {
+			message: "Usuario modificado correctamente",
+			usuario: usuarioEditado,
+		};
+        res.redirect("/control_users");
+    } catch (error) {
+        console.log(error);
+        // Retornar un error en caso de que no se pueda crear el usuario
+        req.session.messages = { message: "Error al editar el usuario" };
+        res.redirect("/control_users");
+    }
+});
+
+// Ruta para eliminar usuario
+routes.post("/eliminarUsuario", async (req, res) => {
+    try {
+        // Obtener los datos del formulario
+        const { id } = req.body;
+        if (!id) {
+            req.session.messages = {
+                message: "Por favor, llene todos los campos",
+            };
+            res.redirect("/control_users");
+            return;
+        }
+        // Validar que el usuario exista
+        const existUser = await Usuario.findOne({
+            where: { id },
+        });
+        // Si el usuario no existe, retornar un error
+        if (!existUser) {
+            req.session.messages = {
+                message: "El usuario no existe",
+            };
+            res.redirect("/control_users");
+            return;
+        }
+        // Si el usuario existe, eliminarlo
+        await existUser.destroy();
+        // Retornar el usuario eliminado
+        req.session.messages = {
+            message: "Usuario eliminado correctamente",
+            usuario: existUser,
+        };
+        // Si el usuario eliminado es el mismo que el que inició sesión, cerrar sesión
+        if (req.session.user.id == id) {
+            req.session.destroy();
+            res.redirect("/");
+            return;
+        }
+        res.redirect("/control_users");
+    } catch (error) {
+        console.log(error);
+        // Retornar un error en caso de que no se pueda crear el usuario
+        req.session.messages = { message: "Error al eliminar el usuario" };
+        res.redirect("/control_users");
+    }
 });
 
 // Ruta para registrar un producto
@@ -160,7 +283,6 @@ routes.post("/registrarProducto", async (req, res) => {
 		}
 		const fechaActual = new Date();
 		const fechaFormateada = fechaActual.toISOString().slice(0, -6);
-		console.log(fechaFormateada);
 
 		// Si el producto no existe, crearlo
 		const producto = new Producto({
@@ -173,6 +295,10 @@ routes.post("/registrarProducto", async (req, res) => {
 		// Guardar el producto en la base de datos
 		const productoCreado = await producto.save();
 		// Retornar el producto creado
+		req.session.messages = {
+			message: "Producto creado correctamente",
+			producto: productoCreado,
+		};
 		res.redirect("/reader");
 	} catch (error) {
 		console.log(error);

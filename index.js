@@ -39,6 +39,7 @@ app.use("/", routes);
 app.use("/js", express.static(join(__dirname, "src/js")));
 app.use("/css", express.static(join(__dirname, "src/css")));
 app.use("/libs", express.static(join(__dirname, "src/libs")));
+app.use("/sounds", express.static(join(__dirname, "src/sounds")));
 app.use("/config", express.static(join(__dirname, "./config")));
 
 app.set("views", "./views");
