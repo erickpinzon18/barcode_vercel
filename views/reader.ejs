@@ -51,7 +51,7 @@
 					</nav>
 					<div class="container-fluid">
 						<div class="row">
-							<div class="col-md-12 col-lg-5 col-xl-5">
+							<div class="col-md-12 col-lg-7 col-xl-7">
 								<div class="card shadow mb-4">
 									<div
 										class="card-header d-flex justify-content-between align-items-center"
@@ -124,6 +124,7 @@
 													name="barcode"
                                                     placeholder="Escanear Codigo de Barras"
 													required
+                                                    autofocus
 												/>
 											</div>
 											<div class="mb-3">
@@ -194,98 +195,9 @@
                                         </div>
 									</div>
 								</div>
-								<div class="card shadow mb-4">
-									<div
-										class="card-header d-flex justify-content-between align-items-center"
-									>
-										<h6 class="text-primary fw-bold m-0">
-											Productos
-										</h6>
-										<div class="dropdown no-arrow">
-											<button
-												class="btn btn-link btn-sm dropdown-toggle"
-												aria-expanded="false"
-												data-bs-toggle="dropdown"
-												type="button"
-											>
-												<i
-													class="fas fa-ellipsis-v text-gray-400"
-												></i>
-											</button>
-											<div
-												class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
-											>
-												<p
-													class="text-center dropdown-header"
-												>
-													dropdown header:
-												</p>
-												<a
-													class="dropdown-item"
-													href="#"
-													>&nbsp;Action</a
-												><a
-													class="dropdown-item"
-													href="#"
-													>&nbsp;Another action</a
-												>
-												<div
-													class="dropdown-divider"
-												></div>
-												<a
-													class="dropdown-item"
-													href="#"
-													>&nbsp;Something else
-													here</a
-												>
-											</div>
-										</div>
-									</div>
-									<div class="card-body">
-                                        <table class="table table-striped-columns mt-3">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Id</th>
-                                                    <th scope="col">Código</th>
-                                                    <th scope="col">Producto</th>
-                                                    <th scope="col">Cantidad</th>
-                                                    <th scope="col">Usuario</th>
-                                                    <th scope="col">Fecha Captura</th>
-                                                    <th scope="col">Opciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% 
-                                                    productos.map((producto) => {
-                                                    let date = new Date(producto.fecha_cap)
-                                                %>
-                                                    <tr>
-                                                        <td id="id_n<%= producto.id %>"><%= producto.id %></td>
-                                                        <td id="codigo_n<%= producto.codigo %>"><%= producto.codigo %></td>
-                                                        <td id="etiqueta_n<%= producto.codigo %>"><%= producto.etiqueta %></td>
-                                                        <td id="cantidad_n<%= producto.codigo %>"><%= producto.cantidad %></td>
-                                                        <td id="cantidad_n<%= producto.codigo %>"><%= producto.id_usuario %></td>
-                                                        <td id="cantidad_n<%= producto.codigo %>"><%= 
-                                                            date.getFullYear() + "-" +
-                                                            date.getMonth() + "-" +
-                                                            date.getDate() + " " +
-                                                            date.getHours() + ":" +
-                                                            date.getMinutes() + ":" +
-                                                            date.getSeconds()
-                                                        %></td>
-                                                        <td>
-                                                            <a onclick="editarProducto('<%= producto.codigo %>')" class="btn btn-primary">Editar</a>
-                                                            <a onclick="eliminarProducto('<%= producto.codigo %>')" class="btn btn-danger mt-1">Eliminar</a>
-                                                        </td>
-                                                    </tr>    
-                                                <% }) %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-								</div>
 							</div>
 							<div
-								class="col-md-12 col-lg-7 col-xl-7 col-xxl-7 offset-lg-0"
+								class="col-md-12 col-lg-5 col-xl-5 col-xxl-5 offset-lg-0"
 							>
 								<div class="card shadow mb-4">
 									<div
@@ -353,15 +265,99 @@
 								</div>
 							</div>
 						</div>
+                        <div class="card shadow mb-4">
+                            <div
+                                class="card-header d-flex justify-content-between align-items-center"
+                            >
+                                <h6 class="text-primary fw-bold m-0">
+                                    Productos
+                                </h6>
+                                <div class="dropdown no-arrow">
+                                    <button
+                                        class="btn btn-link btn-sm dropdown-toggle"
+                                        aria-expanded="false"
+                                        data-bs-toggle="dropdown"
+                                        type="button"
+                                    >
+                                        <i
+                                            class="fas fa-ellipsis-v text-gray-400"
+                                        ></i>
+                                    </button>
+                                    <div
+                                        class="dropdown-menu shadow dropdown-menu-end animated--fade-in"
+                                    >
+                                        <p
+                                            class="text-center dropdown-header"
+                                        >
+                                            dropdown header:
+                                        </p>
+                                        <a
+                                            class="dropdown-item"
+                                            href="#"
+                                            >&nbsp;Action</a
+                                        ><a
+                                            class="dropdown-item"
+                                            href="#"
+                                            >&nbsp;Another action</a
+                                        >
+                                        <div
+                                            class="dropdown-divider"
+                                        ></div>
+                                        <a
+                                            class="dropdown-item"
+                                            href="#"
+                                            >&nbsp;Something else
+                                            here</a
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-striped-columns mt-3">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Id</th>
+                                            <th scope="col">Código</th>
+                                            <th scope="col">Producto</th>
+                                            <th scope="col">Cantidad</th>
+                                            <th scope="col">Usuario</th>
+                                            <th scope="col">Fecha Captura</th>
+                                            <th scope="col">Opciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% 
+                                            productos.map((producto) => {
+                                            producto.codigo = producto.codigo.replace(/ /g, "")
+                                            let date = new Date(producto.fecha_cap)
+                                        %>
+                                            <tr>
+                                                <td id="id_n<%= producto.id %>"><%= producto.id %></td>
+                                                <td id="codigo_n<%= producto.codigo %>"><%= producto.codigo %></td>
+                                                <td id="etiqueta_n<%= producto.codigo %>"><%= producto.etiqueta %></td>
+                                                <td id="cantidad_n<%= producto.codigo %>"><%= producto.cantidad %></td>
+                                                <td id="cantidad_n<%= producto.codigo %>"><%= producto.id_usuario %></td>
+                                                <td id="cantidad_n<%= producto.codigo %>"><%= 
+                                                    date.getFullYear() + "-" +
+                                                    date.getMonth() + "-" +
+                                                    date.getDate() + " " +
+                                                    date.getHours() + ":" +
+                                                    date.getMinutes() + ":" +
+                                                    date.getSeconds()
+                                                %></td>
+                                                <td>
+                                                    <a onclick="editarProducto('<%= producto.codigo %>')" class="btn btn-primary">Editar</a>
+                                                    <a onclick="eliminarProducto('<%= producto.codigo %>')" class="btn btn-danger mt-1">Eliminar</a>
+                                                </td>
+                                            </tr>    
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 					</div>
 				</div>
-				<footer class="bg-white sticky-footer">
-					<div class="container my-auto">
-						<div class="text-center my-auto copyright">
-							<span>Copyright © Reader 2023</span>
-						</div>
-					</div>
-				</footer>
+				<%- include('templates/footer') %>
 			</div>
 			<a class="border rounded d-inline scroll-to-top" href="#page-top"
 				><i class="fas fa-angle-up"></i

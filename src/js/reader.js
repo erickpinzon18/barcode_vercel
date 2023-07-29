@@ -1,7 +1,7 @@
 let scanned = false;
 window.onload = $("#label_detenido").hide();
 
-$('#nav_reader').addClass('active');
+$("#nav_reader").addClass("active");
 
 document.addEventListener("DOMContentLoaded", () => {
 	Quagga.init(
@@ -44,34 +44,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		if (result) {
 			if (result.boxes) {
-				drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
-				result.boxes.filter(function (box) {
-					return box !== result.box;
-				}).forEach(function (box) {
-					Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 });
-				});
+				drawingCtx.clearRect(
+					0,
+					0,
+					parseInt(drawingCanvas.getAttribute("width")),
+					parseInt(drawingCanvas.getAttribute("height"))
+				);
+				result.boxes
+					.filter(function (box) {
+						return box !== result.box;
+					})
+					.forEach(function (box) {
+						Quagga.ImageDebug.drawPath(
+							box,
+							{ x: 0, y: 1 },
+							drawingCtx,
+							{ color: "green", lineWidth: 2 }
+						);
+					});
 			}
 
 			if (result.box) {
-				Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+				Quagga.ImageDebug.drawPath(
+					result.box,
+					{ x: 0, y: 1 },
+					drawingCtx,
+					{ color: "#00F", lineWidth: 2 }
+				);
 			}
 
 			if (result.codeResult && result.codeResult.code) {
-				Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+				Quagga.ImageDebug.drawPath(
+					result.line,
+					{ x: "x", y: "y" },
+					drawingCtx,
+					{ color: "red", lineWidth: 3 }
+				);
 			}
 		}
 	});
 });
 
 function barcodeRead(barcode) {
-    var audio = new Audio('/sounds/beep.mp3');
-    audio.play();
+	var audio = new Audio("/sounds/beep.mp3");
+	audio.play();
 	$("#label_detenido").show();
 	$("#label_leyendo").hide();
 	$("#barcode").val(barcode);
 	$("#barcode").prop("readonly", true);
 	$("#etiqueta").trigger("focus");
-    scanned = true;
+	scanned = true;
 }
 
 function editarProducto(barcode) {
@@ -82,7 +104,8 @@ function editarProducto(barcode) {
 }
 
 function eliminarProducto(barcode) {
-    $("#barcode_delete").val(barcode);
+	console.log(barcode);
+	$("#barcode_delete").val(barcode);
 	$("#etiqueta_delete").val($(`#etiqueta_n${barcode}`).text());
 	$("#cantidad_delete").val($(`#cantidad_n${barcode}`).text());
 	$("#modalEliminar").modal("show");
@@ -117,5 +140,13 @@ $("#btn_reset").on("click", function (event) {
 	$("#label_detenido").hide();
 	$("#label_leyendo").show();
 	$("#barcode").prop("readonly", false);
-    scanned = false;
+	scanned = false;
+});
+
+// Cambiar a etiqueta cuando se presiona enter
+$("#barcode").on("keypress", function (e) {
+	if (e.which === 13) {
+		e.preventDefault();
+		barcodeRead($("#barcode").val());
+	}
 });
