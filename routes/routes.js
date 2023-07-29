@@ -36,6 +36,10 @@ routes.get("/reader", async (req, res) => {
     try {
 		// Obtener todos los productos de la base de datos
 		const productos = await Producto.findAll();
+        // Ordenar los productos por id de forma descendente
+        productos.sort((a, b) => {
+            return new Date(b.id) - new Date(a.id);
+        });
 		// Renderizar la vista index.ejs y pasarle los productos
 		res.render("reader.ejs", { productos, messages: req.session.messages, usuario: req.session.user });
 	} catch (error) {
