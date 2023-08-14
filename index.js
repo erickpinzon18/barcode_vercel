@@ -7,20 +7,19 @@ import dotenv from "dotenv";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
-
+import { serverPort } from "./config/config.js";
 import routes from "./routes/routes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
-const port = 3000;
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
 dotenv.config();
 
-httpServer.listen(port, () => {
-    console.log(`Servidor en el puerto ${port}`);
+httpServer.listen(serverPort, () => {
+    console.log(`Servidor en el puerto ${serverPort}`);
 });
 
 app.use(cors());
