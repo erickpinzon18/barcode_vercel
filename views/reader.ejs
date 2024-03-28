@@ -246,9 +246,9 @@
                                 </div>
                             </div>
                             
-                            <div class="card-body">
-                                <!--
-                                <table class="table table-striped-columns mt-3">
+                            <div class="card-body">                               
+
+                                <table class="table table-striped-columns" id="product_tb">
                                     <thead>
                                         <tr>
                                             <th scope="col">Id</th>
@@ -285,64 +285,6 @@
                                                     <a onclick="eliminarProducto('<%= producto.codigo %>')" class="btn btn-danger mt-1">Eliminar</a>
                                                 </td>
                                             </tr>    
-                                        <% }) %>
-                                    </tbody>
-                                </table>
-                                -->
-
-                                
-                                <div id="toolbar" class="mt-1">
-                                    <select class="form-control">
-                                        <option value="">Export Basic</option>
-                                        <option value="all">Export All</option>
-                                        <option value="selected">Export Selected</option>
-                                    </select>
-                                </div>
-                                
-
-                                <table id="table" 
-                                       data-toggle="table"
-                                       data-search="true"
-                                       data-filter-control="true" 
-                                       data-show-export="true"
-                                       data-toolbar="#toolbar"
-                                       class="table-responsive mt-3">
-                                    <thead>
-                                        <tr>
-                                            <!--<th data-field="state"  data-checkbox="true"></th>
-                                            <th data-field="prenom" data-filter-control="input"  data-sortable="true">First Name</th>
-                                            <th data-field="date"   data-filter-control="select" data-sortable="true">Date</th>
-                                            <th data-field="examen" data-filter-control="select" data-sortable="true">Examination</th>
-                                            <th data-field="note"                                data-sortable="true">Note</th>-->
-
-                                            <th scope="col">Id</th>
-                                            <th scope="col">Código</th>
-                                            <th scope="col">Producto</th>
-                                            <th scope="col">Cantidad</th>
-                                            <th scope="col">Usuario</th>
-                                            <th scope="col">Fecha Captura</th>
-                                            <!--<th scope="col">Opciones</th>-->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% productos.map((producto) => {
-                                           producto.codigo = producto.codigo.replace(/ /g, "")
-                                           let date = new Date(producto.fecha_cap)
-                                        %>
-                                        <tr>
-                                            <!--<td class="bs-checkbox "><input data-index="0" name="btSelectItem" type="checkbox"></td>-->
-                                            <td id="id_n<%= producto.id %>"><%= producto.id %></td>
-                                            <td id="codigo_n<%= producto.codigo %>"><%= producto.codigo %></td>
-                                            <td id="etiqueta_n<%= producto.codigo %>"><%= producto.etiqueta %></td>
-                                            <td id="cantidad_n<%= producto.codigo %>"><%= producto.cantidad %></td>
-                                            <td id="cantidad_n<%= producto.codigo %>"><%= producto.id_usuario %></td>
-                                            <td id="cantidad_n<%= producto.codigo %>"><%= date.getFullYear() + "-" +
-                                                                                          date.getMonth()    + "-" +
-                                                                                          date.getDate()     + " " +
-                                                                                          date.getHours()    + ":" +
-                                                                                          date.getMinutes()  + ":" +
-                                                                                          date.getSeconds()%></td>
-                                        </tr>
                                         <% }) %>
                                     </tbody>
                                 </table>
