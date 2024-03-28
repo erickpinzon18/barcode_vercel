@@ -7,9 +7,10 @@ import dotenv from "dotenv";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
-import { serverPort } from "./config/config.js";
+import serverConfig from "./config/config.js";
 import routes from "./routes/routes.js";
 
+const serverPort = serverConfig.serverPort
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();

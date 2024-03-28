@@ -23,9 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (err) {
 				$("#modal_error").html("Error al iniciar la cámara");
 				$("#modal_error_body").html(
-					"<p>Ha ocurrido un error al iniciar la cámara</p><br><p>Por favor, asegurese de dar permisos y recargue la página</p>"
+					"<p>Ha ocurrido un error al iniciar la cámara</p><br><p>Por favor, asegurese de dar permisos para utilizar la cámara como scanner</p>"
 				);
-				$("#modalError").modal("show");
+				alert('No se ha proporcionado acceso a la cámara, por lo cual no se podrá utilizar como scanner')
+				//$("#modalError").modal("show");
+				$("#label_detenido").show();
+				$("#label_leyendo").hide();
 				console.log(err);
 				return;
 			}
@@ -149,4 +152,19 @@ $("#barcode").on("keypress", function (e) {
 		e.preventDefault();
 		barcodeRead($("#barcode").val());
 	}
+});
+
+
+var $table = $('#table');
+$(function () {
+	$('#toolbar').find('select').change(function () {
+		$table.bootstrapTable('refreshOptions', {
+			exportDataType: $(this).val()
+		});
+	});
+})
+
+var trBoldBlue = $("table");
+$(trBoldBlue).on("click", "tr", function (){
+		$(this).toggleClass("bold-blue");
 });
